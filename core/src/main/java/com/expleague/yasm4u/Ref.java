@@ -13,6 +13,7 @@ public interface Ref<T, D extends Domain> {
   URI toURI();
   Class<T> type();
   Class<D> domainType();
+  Restriction restriction();
 
   T resolve(D controller);
   boolean available(D controller);
