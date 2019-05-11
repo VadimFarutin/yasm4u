@@ -45,7 +45,7 @@ public class SQLRef implements Ref<SQLRef, SQLDomain> {
         return controller.available(this);
     }
 
-    public static SQLRef createFromURI(String uriS) {
+    public static SQLRef createFromURI(String uriS, SQLParser parser) {
         try {
             URI uri = new URI(uriS);
             if ("sql".equals(uri.getScheme())) {
@@ -53,7 +53,7 @@ public class SQLRef implements Ref<SQLRef, SQLDomain> {
                     throw new RuntimeException("//");
                 }
 
-                return create(uri.getPath() + (uri.getQuery() != null ? "?" + uri.getQuery() : ""));
+                return create(uri.getPath() + (uri.getQuery() != null ? "?" + uri.getQuery() : ""), parser);
             } else {
                 throw new IllegalArgumentException("Unsupported protocol: " + uri.getScheme() + " in URI: [" + uriS + "]");
             }
@@ -62,7 +62,8 @@ public class SQLRef implements Ref<SQLRef, SQLDomain> {
         }
     }
 
-    public static SQLRef create(String source) {
+    public static SQLRef create(String source, SQLParser parser) {
+        SQLRestriction restriction = parser.parse(source);
         return null;
     }
 

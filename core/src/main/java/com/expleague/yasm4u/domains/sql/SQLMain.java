@@ -1,5 +1,8 @@
 package com.expleague.yasm4u.domains.sql;
 
+import com.expleague.yasm4u.domains.sql.exceptions.SQLDriverNotFoundException;
+import com.expleague.yasm4u.domains.sql.executors.SQLRestrictionBasedQueryExecutor;
+
 import java.util.Scanner;
 
 public class SQLMain {
@@ -16,12 +19,17 @@ public class SQLMain {
         String password = args[3];
         SQLConfig config = new SQLConfig(driver, url, username, password);
 
-        SQLQueryExecutor executor = new SQLRestrictionBasedQueryExecutor(config);
+        try {
+            SQLQueryExecutor executor = new SQLRestrictionBasedQueryExecutor(config);
 
-        Scanner scanner = new Scanner(System.in);
-        String query = scanner.next();
+            Scanner scanner = new Scanner(System.in);
+            String query = scanner.next();
 
-        String result = executor.process(query);
-        System.out.println(result);
+            String result = executor.process(query);
+            System.out.println(result);
+        } catch (SQLDriverNotFoundException e) {
+            System.err.println("Driver not found");
+            System.exit(1);
+        }
     }
 }

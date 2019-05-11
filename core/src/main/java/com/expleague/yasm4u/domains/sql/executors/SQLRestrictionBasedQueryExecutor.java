@@ -1,7 +1,10 @@
-package com.expleague.yasm4u.domains.sql;
+package com.expleague.yasm4u.domains.sql.executors;
 
 import com.expleague.yasm4u.JobExecutorService;
 import com.expleague.yasm4u.Ref;
+import com.expleague.yasm4u.domains.sql.*;
+import com.expleague.yasm4u.domains.sql.exceptions.SQLDriverNotFoundException;
+import com.expleague.yasm4u.domains.sql.parser.SQLAntlrParser;
 import com.expleague.yasm4u.impl.MainThreadJES;
 
 import java.util.List;
@@ -13,8 +16,9 @@ public class SQLRestrictionBasedQueryExecutor implements SQLQueryExecutor {
     private SQLDomain domain;
     private JobExecutorService jes;
 
-    public SQLRestrictionBasedQueryExecutor(SQLConfig config) {
-        domain = new SQLDomain(config);
+    public SQLRestrictionBasedQueryExecutor(SQLConfig config) throws SQLDriverNotFoundException {
+        SQLParser parser = new SQLAntlrParser();
+        domain = new SQLDomain(config, parser);
         jes = new MainThreadJES(domain);
     }
 
@@ -22,9 +26,6 @@ public class SQLRestrictionBasedQueryExecutor implements SQLQueryExecutor {
     public String process(String query) {
         Set<Ref> from = domain.parseSources(query);
         SQLRef goal = jes.parse(query);
-
-        // add routines
-        // jes.addRoutine();
 
         Future<List<?>> resultFuture = jes.calculate(from, goal);
 

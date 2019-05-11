@@ -1,4 +1,7 @@
-package com.expleague.yasm4u.domains.sql;
+package com.expleague.yasm4u.domains.sql.executors;
+
+import com.expleague.yasm4u.domains.sql.SQLConfig;
+import com.expleague.yasm4u.domains.sql.SQLQueryExecutor;
 
 import java.sql.*;
 
