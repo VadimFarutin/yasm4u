@@ -1,5 +1,6 @@
 package com.expleague.yasm4u.domains.sql;
 
+import com.expleague.yasm4u.domains.sql.exceptions.SQLConnectionException;
 import com.expleague.yasm4u.domains.sql.exceptions.SQLDriverNotFoundException;
 import com.expleague.yasm4u.domains.sql.executors.SQLRestrictionBasedQueryExecutor;
 
@@ -29,6 +30,9 @@ public class SQLMain {
             System.out.println(result);
         } catch (SQLDriverNotFoundException e) {
             System.err.println("Driver not found");
+            System.exit(1);
+        } catch (SQLConnectionException e) {
+            System.err.println("Failed to connect to the database");
             System.exit(1);
         }
     }

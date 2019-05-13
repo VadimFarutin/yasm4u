@@ -45,7 +45,7 @@ public class SQLRef implements Ref<SQLRef, SQLDomain> {
         return controller.available(this);
     }
 
-    public static SQLRef createFromURI(String uriS, SQLParser parser) {
+    public static SQLRef createFromURI(String uriS, SQLQueryParser parser) {
         try {
             URI uri = new URI(uriS);
             if ("sql".equals(uri.getScheme())) {
@@ -62,7 +62,7 @@ public class SQLRef implements Ref<SQLRef, SQLDomain> {
         }
     }
 
-    public static SQLRef create(String source, SQLParser parser) {
+    public static SQLRef create(String source, SQLQueryParser parser) {
         SQLRestriction restriction = parser.parse(source);
         return null;
     }

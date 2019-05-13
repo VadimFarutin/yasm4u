@@ -15,9 +15,9 @@ import java.util.Set;
 
 public class SQLDomain implements Domain {
     private SQLConfig config;
-    private SQLParser parser;
+    private SQLQueryParser parser;
 
-    public SQLDomain(SQLConfig config, SQLParser parser) throws SQLDriverNotFoundException {
+    public SQLDomain(SQLConfig config, SQLQueryParser parser) throws SQLDriverNotFoundException {
         try {
             Class.forName(config.getDriver());
         } catch (ClassNotFoundException e) {
@@ -40,7 +40,7 @@ public class SQLDomain implements Domain {
                 from -> SQLRef.createFromURI("sql:" + from, this.parser));
     }
 
-    public Set<Ref> parseSources(String query) {
+    public Set<Ref> parseSources(String query) throws SQLConnectionException {
         Set<SQLRestriction> restrictions = parser.parseSources(query);
         return null;
     }

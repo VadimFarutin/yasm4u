@@ -3,8 +3,9 @@ package com.expleague.yasm4u.domains.sql.executors;
 import com.expleague.yasm4u.JobExecutorService;
 import com.expleague.yasm4u.Ref;
 import com.expleague.yasm4u.domains.sql.*;
+import com.expleague.yasm4u.domains.sql.exceptions.SQLConnectionException;
 import com.expleague.yasm4u.domains.sql.exceptions.SQLDriverNotFoundException;
-import com.expleague.yasm4u.domains.sql.parser.SQLAntlrParser;
+import com.expleague.yasm4u.domains.sql.parser.SQLAntlrQueryParser;
 import com.expleague.yasm4u.impl.MainThreadJES;
 
 import java.util.List;
@@ -17,13 +18,13 @@ public class SQLRestrictionBasedQueryExecutor implements SQLQueryExecutor {
     private JobExecutorService jes;
 
     public SQLRestrictionBasedQueryExecutor(SQLConfig config) throws SQLDriverNotFoundException {
-        SQLParser parser = new SQLAntlrParser();
+        SQLQueryParser parser = new SQLAntlrQueryParser();
         domain = new SQLDomain(config, parser);
         jes = new MainThreadJES(domain);
     }
 
     @Override
-    public String process(String query) {
+    public String process(String query) throws SQLConnectionException {
         Set<Ref> from = domain.parseSources(query);
         SQLRef goal = jes.parse(query);
 
