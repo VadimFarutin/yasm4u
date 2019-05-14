@@ -40,9 +40,8 @@ public class SQLDomain implements Domain {
                 from -> SQLRef.createFromURI("sql:" + from, this.parser));
     }
 
-    public Set<Ref> parseSources(String query) throws SQLConnectionException {
-        Set<SQLRestriction> restrictions = parser.parseSources(query);
-        return null;
+    public Set<SQLRef> parseSources(String query) throws SQLConnectionException {
+        return parser.parseSources(query);
     }
 
     public List<String> getColumnNames(String tableName) throws SQLConnectionException {

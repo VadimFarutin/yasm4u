@@ -2,6 +2,7 @@ package com.expleague.yasm4u.domains.sql.parser;
 
 import com.expleague.yasm4u.domains.sql.SQLDomain;
 import com.expleague.yasm4u.domains.sql.SQLQueryParser;
+import com.expleague.yasm4u.domains.sql.SQLRef;
 import com.expleague.yasm4u.domains.sql.SQLRestriction;
 import com.expleague.yasm4u.domains.sql.exceptions.SQLConnectionException;
 import com.expleague.yasm4u.domains.sql.parser.gen.SQLLexer;
@@ -26,20 +27,24 @@ public class SQLAntlrQueryParser implements SQLQueryParser {
     @Override
     public SQLRestriction parse(String query) {
         SQLAntlrParserWalker sqlAntlrParserWalker = runWalker(query);
-        return null;
+        return new SQLRestriction(sqlAntlrParserWalker.getSelectedColumns());
     }
 
     @Override
-    public Set<SQLRestriction> parseSources(String query) throws SQLConnectionException {
+    public Set<SQLRef> parseSources(String query) throws SQLConnectionException {
         SQLAntlrParserWalker sqlAntlrParserWalker = runWalker(query);
-        Set<SQLRestriction> sourceTableRestrictions = new HashSet<>();
+        Set<SQLRef> sourceTables = new HashSet<>();
         List<String> tables = sqlAntlrParserWalker.getTables();
 
         for (String table : tables) {
             List<String> columnNames = domain.getColumnNames(table);
+            SQLRestriction tableScheme = new SQLRestriction(new HashSet<>(columnNames));
+            SQLRef tableRef = new SQLRef(table, tableScheme);
+
+            sourceTables.add(tableRef);
         }
 
-        return sourceTableRestrictions;
+        return sourceTables;
     }
 
     private SQLAntlrParserWalker runWalker(String query) {

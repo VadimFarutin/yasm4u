@@ -7,5 +7,5 @@ import java.util.Set;
 public interface SQLQueryParser {
     void setDomain(SQLDomain domain);
     SQLRestriction parse(String query);
-    Set<SQLRestriction> parseSources(String query) throws SQLConnectionException;
+    Set<SQLRef> parseSources(String query) throws SQLConnectionException;
 }

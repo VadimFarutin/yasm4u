@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 public class SQLRestrictionBasedQueryExecutor implements SQLQueryExecutor {
     private SQLDomain domain;
@@ -25,7 +26,8 @@ public class SQLRestrictionBasedQueryExecutor implements SQLQueryExecutor {
 
     @Override
     public String process(String query) throws SQLConnectionException {
-        Set<Ref> from = domain.parseSources(query);
+        Set<SQLRef> fromSql = domain.parseSources(query);
+        Set<Ref> from = fromSql.stream().map(r -> (Ref) r).collect(Collectors.toSet());
         SQLRef goal = jes.parse(query);
 
         Future<List<?>> resultFuture = jes.calculate(from, goal);

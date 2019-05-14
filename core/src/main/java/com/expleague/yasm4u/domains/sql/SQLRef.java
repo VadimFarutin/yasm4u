@@ -7,11 +7,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public class SQLRef implements Ref<SQLRef, SQLDomain> {
-    private final String path;
+    private final String table;
     private final Restriction restriction;
 
-    public SQLRef(String path, Restriction restriction) {
-        this.path = path;
+    public SQLRef(String table, Restriction restriction) {
+        this.table = table;
         this.restriction = restriction;
     }
 
@@ -64,7 +64,7 @@ public class SQLRef implements Ref<SQLRef, SQLDomain> {
 
     public static SQLRef create(String source, SQLQueryParser parser) {
         SQLRestriction restriction = parser.parse(source);
-        return null;
+        return new SQLRef(, restriction);
     }
 
     @Override
@@ -75,12 +75,12 @@ public class SQLRef implements Ref<SQLRef, SQLDomain> {
         SQLRef other = (SQLRef) o;
 
         // compare restrictions?
-        return path.equals(other.path) && restriction.satisfy(other.restriction);
+        return table.equals(other.table) && restriction.satisfy(other.restriction);
     }
 
     @Override
     public int hashCode() {
-        int result = path.hashCode();
+        int result = table.hashCode();
         result = 31 * result + restriction.hashCode();
 
         return result;
