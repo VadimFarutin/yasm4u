@@ -31,8 +31,8 @@ public class SQLSelectRoutine implements Routine {
                      mask = mask.add(BigInteger.ONE))
                 {
                     Set<String> subSet = new HashSet<>(subList(columns, mask));
-                    // make output ref
-                    SQLRef outputRef = ref;
+                    SQLRestriction selectRestriction = restriction.selectColumns(subSet);
+                    SQLRef outputRef = new SQLRef(selectRestriction);
 
                     variants.add(new Joba.Stub(new Ref[]{ref}, new Ref[]{outputRef}) {
                         @Override

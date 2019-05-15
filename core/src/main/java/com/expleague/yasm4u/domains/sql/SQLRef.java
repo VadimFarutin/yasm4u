@@ -8,9 +8,13 @@ import java.net.URISyntaxException;
 
 public class SQLRef implements Ref<SQLRef, SQLDomain> {
     private final String table;
-    private final Restriction restriction;
+    private final SQLRestriction restriction;
 
-    public SQLRef(String table, Restriction restriction) {
+    public SQLRef(SQLRestriction restriction) {
+        this(String.valueOf(restriction.hashCode()), restriction);
+    }
+
+    public SQLRef(String table, SQLRestriction restriction) {
         this.table = table;
         this.restriction = restriction;
     }
@@ -68,7 +72,7 @@ public class SQLRef implements Ref<SQLRef, SQLDomain> {
 
     public static SQLRef create(String source, SQLQueryParser parser) {
         SQLRestriction restriction = parser.parse(source);
-        return new SQLRef(, restriction);
+        return new SQLRef(restriction);
     }
 
     @Override
