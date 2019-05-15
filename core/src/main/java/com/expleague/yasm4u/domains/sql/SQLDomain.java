@@ -12,6 +12,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.StringJoiner;
 
 public class SQLDomain implements Domain {
     private SQLConfig config;
@@ -62,5 +63,28 @@ public class SQLDomain implements Domain {
 
     public boolean available(SQLRef ref) {
         return true;
+    }
+
+    public void select(String fromTable, String toTable, Set<String> columns) throws SQLConnectionException {
+        try (Connection connection = DriverManager.getConnection(config.getUrl(), config.getUsername(), config.getPassword())) {
+            StringJoiner joiner = new StringJoiner(", ");
+            for (String column : columns) {
+                joiner.add(column);
+            }
+
+            StringBuilder builder = new StringBuilder();
+            builder.append("SELECT ")
+                    .append(joiner.toString())
+                    .append(" INTO ")
+                    .append(toTable)
+                    .append(" FROM ")
+                    .append(fromTable)
+                    .append(";");
+
+            Statement statement = connection.createStatement();
+            statement.execute(builder.toString());
+        } catch (SQLException e) {
+            throw new SQLConnectionException();
+        }
     }
 }

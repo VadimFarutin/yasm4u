@@ -7,6 +7,7 @@ import com.expleague.yasm4u.Routine;
 import com.expleague.yasm4u.domains.sql.SQLDomain;
 import com.expleague.yasm4u.domains.sql.SQLRef;
 import com.expleague.yasm4u.domains.sql.SQLRestriction;
+import com.expleague.yasm4u.domains.sql.exceptions.SQLConnectionException;
 
 import java.math.BigInteger;
 import java.util.*;
@@ -37,8 +38,12 @@ public class SQLSelectRoutine implements Routine {
                         @Override
                         public void run() {
                             final SQLDomain env = executor.domain(SQLDomain.class);
-                            // make select
-                            //env.sort((SQLRef) consumes()[0].resolve(env));
+                            try {
+                                SQLRef from = ((SQLRef) consumes()[0]).resolve(env);
+                                SQLRef to = ((SQLRef) produces()[0]).resolve(env);
+                                env.select(from.getTable(), to.getTable(), subSet);
+                            } catch (SQLConnectionException ignored) {
+                            }
                         }
                     });
                 }

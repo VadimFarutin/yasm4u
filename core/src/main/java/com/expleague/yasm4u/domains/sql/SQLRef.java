@@ -45,6 +45,10 @@ public class SQLRef implements Ref<SQLRef, SQLDomain> {
         return controller.available(this);
     }
 
+    public String getTable() {
+        return table;
+    }
+
     public static SQLRef createFromURI(String uriS, SQLQueryParser parser) {
         try {
             URI uri = new URI(uriS);
