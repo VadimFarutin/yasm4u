@@ -62,7 +62,13 @@ public class SQLDomain implements Domain {
     }
 
     public boolean available(SQLRef ref) {
-        return true;
+        try (Connection connection = DriverManager.getConnection(config.getUrl(), config.getUsername(), config.getPassword())) {
+            DatabaseMetaData metaData = connection.getMetaData();
+            ResultSet tables = metaData.getTables(null, null, ref.getTable(), null);
+            return tables.next();
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
     public void select(String fromTable, String toTable, Set<String> columns) throws SQLConnectionException {
