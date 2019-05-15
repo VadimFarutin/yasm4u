@@ -93,4 +93,42 @@ public class SQLDomain implements Domain {
             throw new SQLConnectionException();
         }
     }
+
+    public String getContent(SQLRef ref) throws SQLConnectionException {
+        try (Connection connection = DriverManager.getConnection(config.getUrl(), config.getUsername(), config.getPassword())) {
+            StringBuilder builder = new StringBuilder();
+            builder.append("SELECT * ")
+                    .append(" FROM ")
+                    .append(ref.getTable())
+                    .append(";");
+
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(builder.toString());
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            StringJoiner tableJoiner = new StringJoiner(System.lineSeparator());
+            StringJoiner rowJoiner = new StringJoiner(" ");
+
+            for (int i = 0; i < columnCount; i++) {
+                rowJoiner.add(metaData.getColumnName(i));
+            }
+
+            tableJoiner.add(rowJoiner.toString());
+
+            while (resultSet.next()) {
+                rowJoiner = new StringJoiner(" ");
+
+                for (int i = 0; i < columnCount; i++) {
+                    rowJoiner.add(resultSet.getString(i));
+                }
+
+                tableJoiner.add(rowJoiner.toString());
+            }
+
+            return tableJoiner.toString();
+        } catch (SQLException e) {
+            throw new SQLConnectionException();
+        }
+    }
 }

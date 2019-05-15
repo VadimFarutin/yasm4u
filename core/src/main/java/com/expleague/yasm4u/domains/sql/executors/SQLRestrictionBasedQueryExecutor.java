@@ -5,6 +5,7 @@ import com.expleague.yasm4u.Ref;
 import com.expleague.yasm4u.domains.sql.*;
 import com.expleague.yasm4u.domains.sql.exceptions.SQLConnectionException;
 import com.expleague.yasm4u.domains.sql.exceptions.SQLDriverNotFoundException;
+import com.expleague.yasm4u.domains.sql.exceptions.SQLJobaExecutionException;
 import com.expleague.yasm4u.domains.sql.parser.SQLAntlrQueryParser;
 import com.expleague.yasm4u.impl.MainThreadJES;
 
@@ -25,20 +26,17 @@ public class SQLRestrictionBasedQueryExecutor implements SQLQueryExecutor {
     }
 
     @Override
-    public String process(String query) throws SQLConnectionException {
+    public String process(String query) throws SQLConnectionException, SQLJobaExecutionException {
         Set<SQLRef> fromSql = domain.parseSources(query);
         Set<Ref> from = fromSql.stream().map(r -> (Ref) r).collect(Collectors.toSet());
         SQLRef goal = jes.parse(query);
-
         Future<List<?>> resultFuture = jes.calculate(from, goal);
 
         try {
             List<SQLRef> result = (List<SQLRef>) resultFuture.get();
-            // print output
+            return domain.getContent(result.get(0));
         } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            throw new SQLJobaExecutionException();
         }
-
-        return null;
     }
 }
