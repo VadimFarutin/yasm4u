@@ -24,9 +24,9 @@ public class BaseSQLTest implements TestRule {
             "FIRST_TABLE",
             "SECOND_TABLE"};
     private static final String[] TABLE_SCHEMAS = {
-            "(id INTEGER)",
-            "(col0 VARCHAR(255), col1 VARCHAR(255), col2 VARCHAR(255))",
-            "(col0 VARCHAR(255), col1 VARCHAR(255))"};
+            "(COL0 VARCHAR(255))",
+            "(COL0 VARCHAR(255), COL1 VARCHAR(255), COL2 VARCHAR(255))",
+            "(COL0 VARCHAR(255), COL1 VARCHAR(255))"};
 
     private JdbcDatabaseTester databaseTester;
 
@@ -102,16 +102,18 @@ public class BaseSQLTest implements TestRule {
 
         try (Connection conn = DriverManager.getConnection(config.getUrl(), config.getUsername(), config.getPassword());
              Statement stmt = conn.createStatement()) {
-            dropTables(stmt);
+            dropTables(conn, stmt);
             createTables(stmt);
         }
     }
 
-    private void dropTables(Statement stmt) throws SQLException {
+    private void dropTables(Connection connection, Statement stmt) throws SQLException {
         String dropPattern = "DROP TABLE IF EXISTS %s CASCADE;";
+        DatabaseMetaData metaData = connection.getMetaData();
+        ResultSet allTables = metaData.getTables(null, null, null, new String[]{"TABLE"});
 
-        for (int i = 0; i < TABLE_NAMES.length; i++) {
-            stmt.executeUpdate(String.format(dropPattern, TABLE_NAMES[i]));
+        while (allTables.next()) {
+            stmt.executeUpdate(String.format(dropPattern, allTables.getString("TABLE_NAME")));
         }
     }
 

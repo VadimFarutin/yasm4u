@@ -26,7 +26,7 @@ public class SQLSelectRoutine implements Routine {
                 List<String> columns = new ArrayList<>(restriction.getColumnNames());
                 BigInteger maxMask = allInMask(columns.size());
 
-                for (BigInteger mask = BigInteger.ZERO;
+                for (BigInteger mask = BigInteger.ONE;
                      mask.compareTo(maxMask) <= 0;
                      mask = mask.add(BigInteger.ONE))
                 {

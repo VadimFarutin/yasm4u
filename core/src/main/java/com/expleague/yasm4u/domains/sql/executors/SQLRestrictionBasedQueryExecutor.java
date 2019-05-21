@@ -29,7 +29,7 @@ public class SQLRestrictionBasedQueryExecutor implements SQLQueryExecutor {
     public String process(String query) throws SQLConnectionException, SQLJobaExecutionException {
         Set<SQLRef> fromSql = domain.parseSources(query);
         Set<Ref> from = fromSql.stream().map(r -> (Ref) r).collect(Collectors.toSet());
-        SQLRef goal = jes.parse(query);
+        SQLRef goal = jes.parse("sql:" + query.replace(" ", "%20"));
         Future<List<?>> resultFuture = jes.calculate(from, goal);
 
         try {

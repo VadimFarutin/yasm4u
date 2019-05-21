@@ -22,16 +22,12 @@ public class JDBCQueryExecutor implements SQLQueryExecutor {
 
     @Override
     public String process(String query) throws SQLConnectionException {
-        String result;
-
         try (Connection conn = DriverManager.getConnection(config.getUrl(), config.getUsername(), config.getPassword());
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
-            result = rs.toString();
+            return ResultSetConverter.convert(rs);
         } catch(SQLException se) {
             throw new SQLConnectionException();
         }
-
-        return result;
     }
 }

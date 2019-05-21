@@ -11,7 +11,7 @@ public class SQLRef implements Ref<SQLRef, SQLDomain> {
     private final SQLRestriction restriction;
 
     public SQLRef(SQLRestriction restriction) {
-        this(String.valueOf(restriction.hashCode()), restriction);
+        this("T_" + String.valueOf(restriction.hashCode()), restriction);
     }
 
     public SQLRef(String table, SQLRestriction restriction) {
@@ -61,7 +61,8 @@ public class SQLRef implements Ref<SQLRef, SQLDomain> {
                     throw new RuntimeException("//");
                 }
 
-                return create(uri.getPath() + (uri.getQuery() != null ? "?" + uri.getQuery() : ""), parser);
+                String source = uri.getPath() + (uri.getQuery() != null ? "?" + uri.getQuery() : "");
+                return create(source.replace("%20", " "), parser);
             } else {
                 throw new IllegalArgumentException("Unsupported protocol: " + uri.getScheme() + " in URI: [" + uriS + "]");
             }
@@ -82,8 +83,7 @@ public class SQLRef implements Ref<SQLRef, SQLDomain> {
 
         SQLRef other = (SQLRef) o;
 
-        // compare restrictions?
-        return table.equals(other.table) && restriction.satisfy(other.restriction);
+        return table.equals(other.table) && restriction.equals(other.restriction);
     }
 
     @Override

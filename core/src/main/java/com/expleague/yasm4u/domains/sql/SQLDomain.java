@@ -6,6 +6,7 @@ import com.expleague.yasm4u.Ref;
 import com.expleague.yasm4u.Routine;
 import com.expleague.yasm4u.domains.sql.exceptions.SQLConnectionException;
 import com.expleague.yasm4u.domains.sql.exceptions.SQLDriverNotFoundException;
+import com.expleague.yasm4u.domains.sql.executors.ResultSetConverter;
 import com.expleague.yasm4u.domains.sql.routines.SQLSelectRoutine;
 
 import java.sql.*;
@@ -37,8 +38,8 @@ public class SQLDomain implements Domain {
 
     @Override
     public void publishReferenceParsers(Ref.Parser parser, Controller controller) {
-        parser.registerProtocol("sql",
-                from -> SQLRef.createFromURI("sql:" + from, this.parser));
+//        parser.registerProtocol("sql", from -> SQLRef.createFromURI("sql:" + from, this.parser));
+        parser.registerProtocol("sql", from -> SQLRef.create(from.replace("%20", " "), this.parser));
     }
 
     public Set<SQLRef> parseSources(String query) throws SQLConnectionException {
@@ -79,17 +80,21 @@ public class SQLDomain implements Domain {
             }
 
             StringBuilder builder = new StringBuilder();
-            builder.append("SELECT ")
-                    .append(joiner.toString())
-                    .append(" INTO ")
+            builder.append("CREATE TABLE ")
                     .append(toTable)
+                    .append(" (")
+                    .append(joiner.toString())
+                    .append(") AS (SELECT ")
+                    .append(joiner.toString())
                     .append(" FROM ")
                     .append(fromTable)
+                    .append(") WITH DATA")
                     .append(";");
 
             Statement statement = connection.createStatement();
-            statement.execute(builder.toString());
+            statement.executeUpdate(builder.toString());
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new SQLConnectionException();
         }
     }
@@ -98,36 +103,15 @@ public class SQLDomain implements Domain {
         try (Connection connection = DriverManager.getConnection(config.getUrl(), config.getUsername(), config.getPassword())) {
             StringBuilder builder = new StringBuilder();
             builder.append("SELECT * ")
-                    .append(" FROM ")
+                    .append("FROM ")
                     .append(ref.getTable())
                     .append(";");
 
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(builder.toString());
-            ResultSetMetaData metaData = resultSet.getMetaData();
-            int columnCount = metaData.getColumnCount();
-
-            StringJoiner tableJoiner = new StringJoiner(System.lineSeparator());
-            StringJoiner rowJoiner = new StringJoiner(" ");
-
-            for (int i = 0; i < columnCount; i++) {
-                rowJoiner.add(metaData.getColumnName(i));
-            }
-
-            tableJoiner.add(rowJoiner.toString());
-
-            while (resultSet.next()) {
-                rowJoiner = new StringJoiner(" ");
-
-                for (int i = 0; i < columnCount; i++) {
-                    rowJoiner.add(resultSet.getString(i));
-                }
-
-                tableJoiner.add(rowJoiner.toString());
-            }
-
-            return tableJoiner.toString();
+            return ResultSetConverter.convert(resultSet);
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new SQLConnectionException();
         }
     }
