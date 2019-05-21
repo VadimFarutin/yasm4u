@@ -13,7 +13,7 @@ public class SQLRestriction implements Restriction {
 
     @Override
     public boolean satisfy(Restriction other) {
-        return false;
+        return true;
     }
 
     public Set<String> getColumnNames() {
@@ -27,5 +27,20 @@ public class SQLRestriction implements Restriction {
 
     public SQLRestriction filter() {
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SQLRestriction)) return false;
+        SQLRestriction other = (SQLRestriction) o;
+
+        return columnNames.equals(other.columnNames);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = columnNames.hashCode();
+        return result;
     }
 }
