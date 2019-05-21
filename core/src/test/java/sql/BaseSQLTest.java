@@ -16,7 +16,7 @@ public class BaseSQLTest implements TestRule {
     private static final String URL = "jdbc:hsqldb:testdb";
     private static final String USERNAME = "";
     private static final String PASSWORD = "";
-    private static final String DATABASE_SOURCE = "database.xml";
+    private static final String DATASET_SOURCE = "dataset.xml";
     private static final SQLConfig config = new SQLConfig(DRIVER, URL, USERNAME, PASSWORD);
 
     private static final String[] TABLE_NAMES = {
@@ -85,8 +85,8 @@ public class BaseSQLTest implements TestRule {
     }
 
     private IDataSet getDataSet() throws Exception {
-        File database = new File(this.getClass().getResource(DATABASE_SOURCE).getFile());
-        return new FlatXmlDataSetBuilder().build(new FileInputStream(database));
+        File dataset = new File(this.getClass().getResource(DATASET_SOURCE).getFile());
+        return new FlatXmlDataSetBuilder().build(new FileInputStream(dataset));
     }
 
     private DatabaseOperation getSetUpOperation() {
