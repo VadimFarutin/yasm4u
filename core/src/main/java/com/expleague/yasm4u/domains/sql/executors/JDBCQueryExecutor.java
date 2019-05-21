@@ -2,52 +2,34 @@ package com.expleague.yasm4u.domains.sql.executors;
 
 import com.expleague.yasm4u.domains.sql.SQLConfig;
 import com.expleague.yasm4u.domains.sql.SQLQueryExecutor;
+import com.expleague.yasm4u.domains.sql.exceptions.SQLConnectionException;
+import com.expleague.yasm4u.domains.sql.exceptions.SQLDriverNotFoundException;
 
 import java.sql.*;
 
 public class JDBCQueryExecutor implements SQLQueryExecutor {
     private SQLConfig config;
 
-    public JDBCQueryExecutor(SQLConfig config) {
+    public JDBCQueryExecutor(SQLConfig config) throws SQLDriverNotFoundException {
         this.config = config;
+
+        try {
+            Class.forName(config.getDriver());
+        } catch (ClassNotFoundException e) {
+            throw new SQLDriverNotFoundException();
+        }
     }
 
     @Override
-    public String process(String query) {
-        Connection conn = null;
-        Statement stmt = null;
-        String result = null;
+    public String process(String query) throws SQLConnectionException {
+        String result;
 
-        try{
-            Class.forName(config.getDriver());
-
-            conn = DriverManager.getConnection(config.getUrl(), config.getUsername(), config.getPassword());
-            stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
+        try (Connection conn = DriverManager.getConnection(config.getUrl(), config.getUsername(), config.getPassword());
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
             result = rs.toString();
-
-            rs.close();
-            stmt.close();
-            conn.close();
         } catch(SQLException se) {
-            se.printStackTrace();
-        } catch(Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException ignored) {
-            }
-
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException se) {
-                se.printStackTrace();
-            }
+            throw new SQLConnectionException();
         }
 
         return result;
