@@ -20,21 +20,13 @@ public class SQLTest {
     @Test
     public void testSelect() throws Exception {
         SQLQueryExecutor jdbcExecutor = new JDBCQueryExecutor(BaseSQLTest.getConfig());
-        String query = "SELECT * FROM EMPTY_TABLE;";
-        String result = jdbcExecutor.process(query);
-        System.out.println(result);
-    }
+        SQLQueryExecutor restrictionBasedExecutor = new SQLRestrictionBasedQueryExecutor(BaseSQLTest.getConfig());
 
-//    @Test
-//    public void test() throws Exception {
-//        SQLQueryExecutor jdbcExecutor = new JDBCQueryExecutor(BaseSQLTest.getConfig());
-//        SQLQueryExecutor restrictionBasedExecutor = new SQLRestrictionBasedQueryExecutor(BaseSQLTest.getConfig());
-//
-//        String query = "SELECT * FROM";
-//
-//        String expected = jdbcExecutor.process(query);
-//        String result = restrictionBasedExecutor.process(query);
-//
-//        assertEquals(expected, result);
-//    }
+        String query = "SELECT COL0 FROM EMPTY_TABLE;";
+
+        String expected = jdbcExecutor.process(query);
+        String result = restrictionBasedExecutor.process(query);
+
+        assertEquals(expected, result);
+    }
 }
