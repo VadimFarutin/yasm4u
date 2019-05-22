@@ -1,6 +1,15 @@
 package sql;
 
 import com.expleague.yasm4u.domains.sql.SQLConfig;
+import com.expleague.yasm4u.domains.sql.SQLQueryExecutor;
+import com.expleague.yasm4u.domains.sql.exceptions.SQLConnectionException;
+import com.expleague.yasm4u.domains.sql.exceptions.SQLDriverNotFoundException;
+import com.expleague.yasm4u.domains.sql.exceptions.SQLJobaExecutionException;
+import com.expleague.yasm4u.domains.sql.executors.JDBCQueryExecutor;
+import com.expleague.yasm4u.domains.sql.executors.SQLRestrictionBasedQueryExecutor;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.varia.NullAppender;
 import org.dbunit.*;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
@@ -11,6 +20,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.sql.*;
 
+import static org.junit.Assert.assertEquals;
+
 public class BaseSQLTest implements TestRule {
     private static final String DRIVER = "org.hsqldb.jdbcDriver";
     private static final String URL = "jdbc:hsqldb:testdb";
@@ -20,13 +31,15 @@ public class BaseSQLTest implements TestRule {
     private static final SQLConfig config = new SQLConfig(DRIVER, URL, USERNAME, PASSWORD);
 
     private static final String[] TABLE_NAMES = {
-            "EMPTY_TABLE",
-            "FIRST_TABLE",
-            "SECOND_TABLE"};
+            "A",
+            "B",
+            "C",
+            "D", "E", "F"};
     private static final String[] TABLE_SCHEMAS = {
-            "(COL0 VARCHAR(255))",
             "(COL0 VARCHAR(255), COL1 VARCHAR(255), COL2 VARCHAR(255))",
-            "(COL0 VARCHAR(255), COL1 VARCHAR(255))"};
+            "(COL0 VARCHAR(255), COL1 VARCHAR(255))",
+            "(NAME VARCHAR(255), AGE INT)",
+            "(NAME VARCHAR(255), AGE INT)", "(ID1 INT)", "(ID2 INT)"};
 
     private JdbcDatabaseTester databaseTester;
 
@@ -40,11 +53,18 @@ public class BaseSQLTest implements TestRule {
                                                 config.getUrl(),
                                                 config.getUsername(),
                                                 config.getPassword());
-        createTables();
+
+        Logger.getLogger("org.dbunit").setLevel(Level.ERROR);
     }
 
-    public static SQLConfig getConfig() {
-        return config;
+    public static void testQuery(String query) throws SQLDriverNotFoundException, SQLConnectionException, SQLJobaExecutionException {
+        SQLQueryExecutor jdbcExecutor = new JDBCQueryExecutor(config);
+        SQLQueryExecutor restrictionBasedExecutor = new SQLRestrictionBasedQueryExecutor(config);
+
+        String expected = jdbcExecutor.process(query);
+        String result = restrictionBasedExecutor.process(query);
+
+        assertEquals(expected, result);
     }
 
     @Override
@@ -61,6 +81,9 @@ public class BaseSQLTest implements TestRule {
     }
 
     private void setUp() throws Exception {
+        dropTables();
+        createTables();
+
         IDatabaseTester databaseTester = getDatabaseTester();
         databaseTester.setSetUpOperation(getSetUpOperation());
         databaseTester.setDataSet(getDataSet());
@@ -74,6 +97,8 @@ public class BaseSQLTest implements TestRule {
         databaseTester.setDataSet(getDataSet());
         databaseTester.setOperationListener(getOperationListener());
         databaseTester.onTearDown();
+
+        dropTables();
     }
 
     private IDatabaseTester getDatabaseTester() {
@@ -99,29 +124,28 @@ public class BaseSQLTest implements TestRule {
 
     private void createTables() throws ClassNotFoundException, SQLException {
         Class.forName(config.getDriver());
+        String createPattern = "CREATE TABLE %s %s;";
 
         try (Connection conn = DriverManager.getConnection(config.getUrl(), config.getUsername(), config.getPassword());
              Statement stmt = conn.createStatement()) {
-            dropTables(conn, stmt);
-            createTables(stmt);
+            for (int i = 0; i < TABLE_NAMES.length; i++) {
+                stmt.executeUpdate(String.format(createPattern, TABLE_NAMES[i], TABLE_SCHEMAS[i]));
+            }
         }
     }
 
-    private void dropTables(Connection connection, Statement stmt) throws SQLException {
+    private void dropTables() throws ClassNotFoundException, SQLException {
+        Class.forName(config.getDriver());
         String dropPattern = "DROP TABLE IF EXISTS %s CASCADE;";
-        DatabaseMetaData metaData = connection.getMetaData();
-        ResultSet allTables = metaData.getTables(null, null, null, new String[]{"TABLE"});
 
-        while (allTables.next()) {
-            stmt.executeUpdate(String.format(dropPattern, allTables.getString("TABLE_NAME")));
-        }
-    }
+        try (Connection conn = DriverManager.getConnection(config.getUrl(), config.getUsername(), config.getPassword());
+             Statement stmt = conn.createStatement()) {
+            DatabaseMetaData metaData = conn.getMetaData();
+            ResultSet allTables = metaData.getTables(null, null, null, new String[]{"TABLE"});
 
-    private void createTables(Statement stmt) throws SQLException {
-        String createPattern = "CREATE TABLE %s %s;";
-
-        for (int i = 0; i < TABLE_NAMES.length; i++) {
-            stmt.executeUpdate(String.format(createPattern, TABLE_NAMES[i], TABLE_SCHEMAS[i]));
+            while (allTables.next()) {
+                stmt.executeUpdate(String.format(dropPattern, allTables.getString("TABLE_NAME")));
+            }
         }
     }
 }
