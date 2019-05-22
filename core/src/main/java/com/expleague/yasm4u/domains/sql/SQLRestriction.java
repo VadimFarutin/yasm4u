@@ -3,12 +3,13 @@ package com.expleague.yasm4u.domains.sql;
 import com.expleague.yasm4u.Restriction;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 public class SQLRestriction implements Restriction {
     private Set<String> columnNames;
 
     public SQLRestriction(Set<String> columnNames) {
-        this.columnNames = columnNames;
+        this.columnNames = new TreeSet<>(columnNames);
     }
 
     @Override
