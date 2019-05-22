@@ -3,18 +3,23 @@ package com.expleague.yasm4u.domains.sql.executors;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.StringJoiner;
+import java.util.*;
 
 public class ResultSetConverter {
     public static String convert(ResultSet resultSet) throws SQLException {
         ResultSetMetaData metaData = resultSet.getMetaData();
         int columnCount = metaData.getColumnCount();
 
+        SortedSet<String> columnNames = new TreeSet<>();
         StringJoiner tableJoiner = new StringJoiner(System.lineSeparator());
         StringJoiner rowJoiner = new StringJoiner(" ");
 
         for (int i = 1; i <= columnCount; i++) {
-            rowJoiner.add(metaData.getColumnName(i));
+            columnNames.add(metaData.getColumnName(i));
+        }
+
+        for (String columnName : columnNames) {
+            rowJoiner.add(columnName);
         }
 
         tableJoiner.add(rowJoiner.toString());
@@ -22,8 +27,8 @@ public class ResultSetConverter {
         while (resultSet.next()) {
             rowJoiner = new StringJoiner(" ");
 
-            for (int i = 1; i <= columnCount; i++) {
-                rowJoiner.add(resultSet.getString(i));
+            for (String columnName : columnNames) {
+                rowJoiner.add(resultSet.getString(columnName));
             }
 
             tableJoiner.add(rowJoiner.toString());
