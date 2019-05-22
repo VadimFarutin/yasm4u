@@ -7,6 +7,7 @@ import com.expleague.yasm4u.Routine;
 import com.expleague.yasm4u.domains.sql.exceptions.SQLConnectionException;
 import com.expleague.yasm4u.domains.sql.exceptions.SQLDriverNotFoundException;
 import com.expleague.yasm4u.domains.sql.executors.ResultSetConverter;
+import com.expleague.yasm4u.domains.sql.routines.SQLCrossJoinRoutine;
 import com.expleague.yasm4u.domains.sql.routines.SQLSelectRoutine;
 
 import java.sql.*;
@@ -34,6 +35,7 @@ public class SQLDomain implements Domain {
     @Override
     public void publishExecutables(List<Joba> jobs, List<Routine> routines) {
         routines.add(new SQLSelectRoutine());
+        routines.add(new SQLCrossJoinRoutine());
     }
 
     @Override
@@ -88,6 +90,35 @@ public class SQLDomain implements Domain {
                     .append(joiner.toString())
                     .append(" FROM ")
                     .append(fromTable)
+                    .append(") WITH DATA")
+                    .append(";");
+
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(builder.toString());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLConnectionException();
+        }
+    }
+
+    public void crossJoin(String fromTableFirst, String fromTableSecond, String toTable, Set<String> columns) throws SQLConnectionException {
+        try (Connection connection = DriverManager.getConnection(config.getUrl(), config.getUsername(), config.getPassword())) {
+            StringJoiner joiner = new StringJoiner(", ");
+            for (String column : columns) {
+                joiner.add(column);
+            }
+
+            StringBuilder builder = new StringBuilder();
+            builder.append("CREATE TABLE ")
+                    .append(toTable)
+                    .append(" (")
+                    .append(joiner.toString())
+                    .append(") AS (SELECT ")
+                    .append(joiner.toString())
+                    .append(" FROM ")
+                    .append(fromTableFirst)
+                    .append(", ")
+                    .append(fromTableSecond)
                     .append(") WITH DATA")
                     .append(";");
 
