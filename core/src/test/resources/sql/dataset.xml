@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
-    <EMPTY_TABLE COL0="row 0 col 0"/>
-    <FIRST_TABLE COL0="row 0 col 0"
-                 COL1="row 0 col 1"
-                 COL2="row 0 col 2"/>
-    <FIRST_TABLE COL1="row 1 col 1"/>
-    <SECOND_TABLE COL0="row 0 col 0"
-                  COL1="row 0 col 1" />
+    <A COL0="row 0 col 0"
+       COL1="row 0 col 1"
+       COL2="row 0 col 2"/>
+    <A COL1="row 1 col 1"/>
+
+    <B COl0="row 0 col 0"
+       COL1="row 0 col 1"/>
+
+    <C/>
+
+    <D NAME="Alice"
+       AGE="20"/>
+    <D NAME="Bob"
+       AGE="30"/>
+
+    <E ID1="42"/>
+    <F/>
 </dataset>
