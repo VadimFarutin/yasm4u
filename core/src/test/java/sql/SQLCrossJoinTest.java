@@ -19,8 +19,17 @@ public class SQLCrossJoinTest {
     }
 
     @Test
-    public void testJoin() throws Exception {
-//        BaseSQLTest.testQuery("SELECT COL1, AGE FROM A, D;");
+    public void testCrossJoinAllColumns() throws Exception {
         BaseSQLTest.testQuery("SELECT NAME, AGE, ID1 FROM D, E;");
+    }
+
+    @Test
+    public void testCrossJoinColumnsSubset() throws Exception {
+        BaseSQLTest.testQuery("SELECT COL1, AGE FROM A, D;");
+    }
+
+    @Test
+    public void testCrossJoinManyTables() throws Exception {
+        BaseSQLTest.testQuery("SELECT COL1, AGE, ID1 FROM A, D, E;");
     }
 }
