@@ -32,7 +32,7 @@ tableSourceItem
     ;
 
 joinPart
-    : (INNER | CROSS)? JOIN tableSourceItem (ON expression)?
+    : NATURAL JOIN tableSourceItem
     ;
 
 unionStatement
