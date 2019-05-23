@@ -34,6 +34,10 @@ public class SQLSelectRoutine implements Routine {
                     SQLRestriction selectRestriction = restriction.selectColumns(subSet);
                     SQLRef outputRef = new SQLRef(selectRestriction);
 
+                    if (outputRef.equals(ref)) {
+                        continue;
+                    }
+
                     variants.add(new Joba.Stub(new Ref[]{ref}, new Ref[]{outputRef}) {
                         @Override
                         public void run() {
