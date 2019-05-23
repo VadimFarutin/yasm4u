@@ -34,12 +34,16 @@ public class BaseSQLTest implements TestRule {
             "A",
             "B",
             "C",
-            "D", "E", "F"};
+            "D",
+            "E",
+            "F"};
     private static final String[] TABLE_SCHEMAS = {
             "(COL0 VARCHAR(255), COL1 VARCHAR(255), COL2 VARCHAR(255))",
-            "(COL0 VARCHAR(255), COL1 VARCHAR(255))",
+            "(COL0 VARCHAR(255), COL1 VARCHAR(255), COL3 VARCHAR(255))",
             "(NAME VARCHAR(255), AGE INT)",
-            "(NAME VARCHAR(255), AGE INT)", "(ID1 INT)", "(ID2 INT)"};
+            "(NAME VARCHAR(255), AGE INT)",
+            "(ID1 INT)",
+            "(NAME VARCHAR(255), HEIGHT INT)"};
 
     private JdbcDatabaseTester databaseTester;
 

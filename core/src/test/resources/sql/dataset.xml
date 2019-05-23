@@ -6,7 +6,11 @@
     <A COL1="row 1 col 1"/>
 
     <B COl0="row 0 col 0"
-       COL1="row 0 col 1"/>
+       COL1="row 0 col 1"
+       COL3="row 0 col 3"/>
+    <B COl0="row 1 col 0"
+       COL1="row 1 col 1"
+       COL3="row 1 col 3"/>
 
     <C/>
 
@@ -16,5 +20,9 @@
        AGE="30"/>
 
     <E ID1="42"/>
-    <F/>
+
+    <F NAME="Alice"
+       HEIGHT="170"/>
+    <F NAME="Alice"
+       HEIGHT="160"/>
 </dataset>
