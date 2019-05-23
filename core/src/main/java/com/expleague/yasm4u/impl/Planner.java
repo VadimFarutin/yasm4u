@@ -141,7 +141,7 @@ public class Planner {
       final Set<Joba> jobs = new HashSet<>(currentState.possibleJobas);
       {
         final Set<Joba> randomOrderTasks = new HashSet<>();
-        { // Filter impossible, we don't need produced resources yet or producing something that is needed by other tasks
+        { // Filter impossible, we don't need produced resources yet
           final Set<Ref> consumedResources = new HashSet<>();
           for (final Joba job : jobs) {
             consumedResources.addAll(Arrays.asList(job.consumes()));
@@ -151,12 +151,10 @@ public class Planner {
             final Ref[] produces = jobIt.next().produces();
             boolean needed = false;
             for (Ref produce : produces) {
-              if (consumedResources.contains(produce)) {
-                jobIt.remove();
-                needed = true; // to preserve double remove
+              if (current.contains(produce)) {
+                needed = true;
                 break;
               }
-              needed |= current.contains(produce);
             }
             if (!needed)
               jobIt.remove();
