@@ -24,6 +24,8 @@ public class ResultSetConverter {
 
         tableJoiner.add(rowJoiner.toString());
 
+        List<String> rows = new ArrayList<>();
+
         while (resultSet.next()) {
             rowJoiner = new StringJoiner(" ");
 
@@ -31,7 +33,13 @@ public class ResultSetConverter {
                 rowJoiner.add(resultSet.getString(columnName));
             }
 
-            tableJoiner.add(rowJoiner.toString());
+            rows.add(rowJoiner.toString());
+        }
+
+        Collections.sort(rows);
+
+        for (String row : rows) {
+            tableJoiner.add(row);
         }
 
         return tableJoiner.toString();
