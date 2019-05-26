@@ -43,7 +43,7 @@ public class SQLNaturalJoinRoutine implements Routine {
 
                     Set<String> union = new HashSet<>(firstColumns);
                     union.addAll(secondColumns);
-                    SQLRestriction naturalJoinRestriction = new SQLRestriction(union);
+                    SQLRestriction naturalJoinRestriction = firstRestriction.naturalJoin(secondRestriction);
                     SQLRef outputRef = new SQLRef(naturalJoinRestriction);
 
                     variants.add(new Joba.Stub(new Ref[]{first, second}, new Ref[]{outputRef}) {

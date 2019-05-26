@@ -27,7 +27,8 @@ public class SQLAntlrQueryParser implements SQLQueryParser {
     @Override
     public SQLRestriction parse(String query) {
         SQLAntlrParserWalker sqlAntlrParserWalker = runWalker(query);
-        return new SQLRestriction(sqlAntlrParserWalker.getSelectedColumns());
+        return new SQLRestriction(sqlAntlrParserWalker.getSelectedColumns(),
+                                  sqlAntlrParserWalker.getColumnPredicates());
     }
 
     @Override

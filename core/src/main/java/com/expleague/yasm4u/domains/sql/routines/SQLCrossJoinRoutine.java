@@ -39,7 +39,7 @@ public class SQLCrossJoinRoutine implements Routine {
 
                     Set<String> union = new HashSet<>(firstColumns);
                     union.addAll(secondColumns);
-                    SQLRestriction crossJoinRestriction = new SQLRestriction(union);
+                    SQLRestriction crossJoinRestriction = firstRestriction.crossJoin(secondRestriction);
                     SQLRef outputRef = new SQLRef(crossJoinRestriction);
 
                     variants.add(new Joba.Stub(new Ref[]{first, second}, new Ref[]{outputRef}) {

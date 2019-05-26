@@ -161,6 +161,35 @@ public class SQLDomain implements Domain {
         }
     }
 
+    public void filter(String fromTable, String toTable, Set<String> columns, String predicate) throws SQLConnectionException {
+        try (Connection connection = DriverManager.getConnection(config.getUrl(), config.getUsername(), config.getPassword())) {
+            StringJoiner joiner = new StringJoiner(", ");
+            for (String column : columns) {
+                joiner.add(column);
+            }
+
+            StringBuilder builder = new StringBuilder();
+            builder.append("CREATE TABLE ")
+                    .append(toTable)
+                    .append(" (")
+                    .append(joiner.toString())
+                    .append(") AS (SELECT ")
+                    .append(joiner.toString())
+                    .append(" FROM ")
+                    .append(fromTable)
+                    .append(" WHERE ")
+                    .append(predicate)
+                    .append(") WITH DATA")
+                    .append(";");
+
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(builder.toString());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new SQLConnectionException();
+        }
+    }
+
     public String getContent(SQLRef ref) throws SQLConnectionException {
         try (Connection connection = DriverManager.getConnection(config.getUrl(), config.getUsername(), config.getPassword())) {
             StringBuilder builder = new StringBuilder();
