@@ -7,4 +7,5 @@ package com.expleague.yasm4u;
  */
 public interface Routine {
   Joba[] buildVariants(Ref[] state, JobExecutorService executor);
+  Joba[] buildVariantsFor(Ref[] goals, JobExecutorService executor);
 }

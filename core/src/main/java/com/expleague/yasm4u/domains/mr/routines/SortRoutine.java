@@ -34,4 +34,9 @@ public class SortRoutine implements Routine {
     }
     return variants.toArray(new Joba[variants.size()]);
   }
+
+  @Override
+  public Joba[] buildVariantsFor(Ref[] goals, JobExecutorService executor) {
+    return new Joba[0];
+  }
 }

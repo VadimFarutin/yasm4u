@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <A COL0="row 0 col 0"
+       COL1="row 0 col 1"
+       COL2="row 0 col 2"/>
+    <A COL1="row 1 col 1"/>
+
+    <B COl0="row 0 col 0"
+       COL1="row 0 col 1"
+       COL3="row 0 col 3"/>
+    <B COl0="row 1 col 0"
+       COL1="row 1 col 1"
+       COL3="row 1 col 3"/>
+
+    <C/>
+
+    <D NAME="Alice"
+       AGE="20"/>
+    <D NAME="Bob"
+       AGE="30"/>
+
+    <E ID1="42"/>
+
+    <F NAME="Alice"
+       HEIGHT="170"/>
+    <F NAME="Alice"
+       HEIGHT="160"/>
+</dataset>
