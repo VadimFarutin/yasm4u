@@ -360,30 +360,6 @@ public interface SQLParserListener extends ParseTreeListener {
 	 */
 	void exitFunctionArg(SQLParser.FunctionArgContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code isExpression}
-	 * labeled alternative in {@link SQLParser#expression}.
-	 * @param ctx the parse tree
-	 */
-	void enterIsExpression(SQLParser.IsExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code isExpression}
-	 * labeled alternative in {@link SQLParser#expression}.
-	 * @param ctx the parse tree
-	 */
-	void exitIsExpression(SQLParser.IsExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code notExpression}
-	 * labeled alternative in {@link SQLParser#expression}.
-	 * @param ctx the parse tree
-	 */
-	void enterNotExpression(SQLParser.NotExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code notExpression}
-	 * labeled alternative in {@link SQLParser#expression}.
-	 * @param ctx the parse tree
-	 */
-	void exitNotExpression(SQLParser.NotExpressionContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code logicalExpression}
 	 * labeled alternative in {@link SQLParser#expression}.
 	 * @param ctx the parse tree
@@ -420,18 +396,6 @@ public interface SQLParserListener extends ParseTreeListener {
 	 */
 	void exitExpressionAtomPredicate(SQLParser.ExpressionAtomPredicateContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code subqueryComparasionPredicate}
-	 * labeled alternative in {@link SQLParser#predicate}.
-	 * @param ctx the parse tree
-	 */
-	void enterSubqueryComparasionPredicate(SQLParser.SubqueryComparasionPredicateContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code subqueryComparasionPredicate}
-	 * labeled alternative in {@link SQLParser#predicate}.
-	 * @param ctx the parse tree
-	 */
-	void exitSubqueryComparasionPredicate(SQLParser.SubqueryComparasionPredicateContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code binaryComparasionPredicate}
 	 * labeled alternative in {@link SQLParser#predicate}.
 	 * @param ctx the parse tree
@@ -443,30 +407,6 @@ public interface SQLParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitBinaryComparasionPredicate(SQLParser.BinaryComparasionPredicateContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code isNullPredicate}
-	 * labeled alternative in {@link SQLParser#predicate}.
-	 * @param ctx the parse tree
-	 */
-	void enterIsNullPredicate(SQLParser.IsNullPredicateContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code isNullPredicate}
-	 * labeled alternative in {@link SQLParser#predicate}.
-	 * @param ctx the parse tree
-	 */
-	void exitIsNullPredicate(SQLParser.IsNullPredicateContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code subqueryExpessionAtom}
-	 * labeled alternative in {@link SQLParser#expressionAtom}.
-	 * @param ctx the parse tree
-	 */
-	void enterSubqueryExpessionAtom(SQLParser.SubqueryExpessionAtomContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code subqueryExpessionAtom}
-	 * labeled alternative in {@link SQLParser#expressionAtom}.
-	 * @param ctx the parse tree
-	 */
-	void exitSubqueryExpessionAtom(SQLParser.SubqueryExpessionAtomContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code constantExpressionAtom}
 	 * labeled alternative in {@link SQLParser#expressionAtom}.
@@ -480,18 +420,6 @@ public interface SQLParserListener extends ParseTreeListener {
 	 */
 	void exitConstantExpressionAtom(SQLParser.ConstantExpressionAtomContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code functionCallExpressionAtom}
-	 * labeled alternative in {@link SQLParser#expressionAtom}.
-	 * @param ctx the parse tree
-	 */
-	void enterFunctionCallExpressionAtom(SQLParser.FunctionCallExpressionAtomContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code functionCallExpressionAtom}
-	 * labeled alternative in {@link SQLParser#expressionAtom}.
-	 * @param ctx the parse tree
-	 */
-	void exitFunctionCallExpressionAtom(SQLParser.FunctionCallExpressionAtomContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code fullColumnNameExpressionAtom}
 	 * labeled alternative in {@link SQLParser#expressionAtom}.
 	 * @param ctx the parse tree
@@ -503,18 +431,6 @@ public interface SQLParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFullColumnNameExpressionAtom(SQLParser.FullColumnNameExpressionAtomContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code nestedExpressionAtom}
-	 * labeled alternative in {@link SQLParser#expressionAtom}.
-	 * @param ctx the parse tree
-	 */
-	void enterNestedExpressionAtom(SQLParser.NestedExpressionAtomContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code nestedExpressionAtom}
-	 * labeled alternative in {@link SQLParser#expressionAtom}.
-	 * @param ctx the parse tree
-	 */
-	void exitNestedExpressionAtom(SQLParser.NestedExpressionAtomContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code mathExpressionAtom}
 	 * labeled alternative in {@link SQLParser#expressionAtom}.

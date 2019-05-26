@@ -109,7 +109,7 @@ constant
 
 functionCall
     : aggregateWindowedFunction                                     #aggregateFunctionCall
-    | functionNameBase '(' functionArgs? ')'                      #scalarFunctionCall
+    | functionNameBase '(' functionArgs? ')'                        #scalarFunctionCall
     | uid '(' functionArgs? ')'                                     #udfFunctionCall
     ;
 
@@ -132,25 +132,18 @@ functionArg
 // Expressions, predicates
 
 expression
-    : notOperator=(NOT | '!') expression                            #notExpression
-    | expression logicalOperator expression                         #logicalExpression
-    | predicate IS testValue=(TRUE | FALSE)                    #isExpression
+    : expression logicalOperator expression                         #logicalExpression
     | predicate                                                     #predicateExpression
     ;
 
 predicate
-    : predicate IS nullNotnull                                      #isNullPredicate
-    | left=predicate comparisonOperator right=predicate             #binaryComparasionPredicate
-    | predicate comparisonOperator '(' selectStatement ')'          #subqueryComparasionPredicate
+    : left=predicate comparisonOperator right=predicate             #binaryComparasionPredicate
     | expressionAtom                                                #expressionAtomPredicate
     ;
 
 expressionAtom
     : constant                                                      #constantExpressionAtom
     | fullColumnName                                                #fullColumnNameExpressionAtom
-    | functionCall                                                  #functionCallExpressionAtom
-    | '(' expression (',' expression)* ')'                          #nestedExpressionAtom
-    | '(' selectStatement ')'                                       #subqueryExpessionAtom
     | left=expressionAtom mathOperator right=expressionAtom         #mathExpressionAtom
     ;
 
