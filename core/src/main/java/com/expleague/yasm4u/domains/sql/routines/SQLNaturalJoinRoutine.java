@@ -65,4 +65,9 @@ public class SQLNaturalJoinRoutine implements Routine {
 
         return variants.toArray(new Joba[0]);
     }
+
+    @Override
+    public Joba[] buildVariantsFor(Ref[] goals, JobExecutorService executor) {
+        return new Joba[0];
+    }
 }

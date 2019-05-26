@@ -78,6 +78,11 @@ public class PlannerTest {
                   result.add(new EmptyJoba(new Ref[]{b}, new Ref[]{c}));
                 return result.toArray(new Joba[result.size()]);
               }
+
+              @Override
+              public Joba[] buildVariantsFor(Ref[] goals, JobExecutorService executor) {
+                return new Joba[0];
+              }
             }
     }, new Joba[]{
             new EmptyJoba(new Ref[]{}, new Ref[]{a}),
@@ -199,6 +204,11 @@ public class PlannerTest {
         return new Joba[]{new EmptyJoba(deps.toArray(new Ref[deps.size()]), new Ref[]{new FakeRef(to)})};
       return new Joba[0];
     }
+
+    @Override
+    public Joba[] buildVariantsFor(Ref[] goals, JobExecutorService executor) {
+      return new Joba[0];
+    }
   }
 
   private static class CreateFromAirRoutine implements Routine {
@@ -224,6 +234,11 @@ public class PlannerTest {
       }
       return result.toArray(new Joba[result.size()]);
     }
+
+    @Override
+    public Joba[] buildVariantsFor(Ref[] goals, JobExecutorService executor) {
+      return new Joba[0];
+    }
   }
 
   private static class SequentialRoutine implements Routine {
@@ -245,6 +260,11 @@ public class PlannerTest {
           result.add(new EmptyJoba(new Ref[]{ref}, new Ref[]{new FakeRef(index + 1)}));
       }
       return result.toArray(new Joba[result.size()]);
+    }
+
+    @Override
+    public Joba[] buildVariantsFor(Ref[] goals, JobExecutorService executor) {
+      return new Joba[0];
     }
   }
 

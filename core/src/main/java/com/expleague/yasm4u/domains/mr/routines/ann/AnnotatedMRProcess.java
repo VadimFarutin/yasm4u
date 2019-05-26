@@ -72,6 +72,11 @@ public class AnnotatedMRProcess implements Routine {
     return new Joba[0];
   }
 
+  @Override
+  public Joba[] buildVariantsFor(Ref[] goals, JobExecutorService executor) {
+    return new Joba[0];
+  }
+
   private boolean checkInput(final Ref[] available, List<Ref> in, List<Ref> out) {
     { // trying to update input from Input interface
       final Class<?>[] classes = processDescription.getClasses();

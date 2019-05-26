@@ -57,6 +57,11 @@ public class SQLSelectRoutine implements Routine {
         return variants.toArray(new Joba[0]);
     }
 
+    @Override
+    public Joba[] buildVariantsFor(Ref[] goals, JobExecutorService executor) {
+        return new Joba[0];
+    }
+
     private static BigInteger allInMask(int n) {
         char[] ones = new char[n];
         Arrays.fill(ones, '1');
